@@ -5,7 +5,7 @@ Set of tools for base64 encoding and decoding.
 import base64
 
 
-class Base64:
+class Base64Converter:
     """
     Base64 encoding and decoding.
     """
@@ -16,7 +16,7 @@ class Base64:
         """
         self.last_base64 = None
 
-    def encode(self, data):
+    def encode(self, data: bytes):
         """
         Encode data using base64 encoding.
         """

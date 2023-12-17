@@ -1,1 +1,4 @@
+Pillow~=10.1.0
+pylint~=3.0.3
+setuptools~=68.2.0
 streamlit~=1.29.0

@@ -5,8 +5,8 @@ A collection of tools for various purposes
 
 ## Tools
 
-- [ ] Base64 encoder/decoder
-- [ ] Image type converter
+- [x] Base64 encoder/decoder
+- [x] Image type converter
 
 ## Usage
 
@@ -23,8 +23,16 @@ python main.py
 To install the required packages, run the following command:
 
 ```bash
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
+
+# To install the toolbox
+python -m pip install -e ./src
 ```
 
-## License
-[MIT](https://choosealicense.com/licenses/mit/)
+## Development Notes
+
+Before committing any changes, run the following command to check for any formatting errors:
+
+```bash
+python -m pylint ./src
+```
