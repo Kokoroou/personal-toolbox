@@ -7,7 +7,7 @@ def main():
     Run Streamlit app
     """
     current_dir = Path(__file__).parent.resolve()
-    app_filepath = current_dir / "src" / "🏠_Homepage.py"
+    app_filepath = current_dir / "src" / "ui" / "🏠_Homepage.py"
 
     os.system(f"streamlit run \"{app_filepath}\"")
 

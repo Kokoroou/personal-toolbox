@@ -23,12 +23,14 @@ class ImageConverter:
 
         :param image: Image to convert
         :param img_format: Format to convert to.
-            Supported formats: PNG, JPEG, BMP, GIF, TIFF, WebP, ICO
+            Supported formats: All formats fully supported by Pillow
         :return: Converted image
         """
         self.last_image = image.convert("RGB")
 
-        if img_format.lower() in ["png", "jpeg", "bmp", "gif", "tiff", "webp", "ico"]:
+        if img_format.lower() in ["blp", "bmp", "dds", "dib", "eps", "gif", "icns", "ico", "im",
+                                  "jpeg", "msp", "pcx", "png", "ppm", "sgi", "spider",
+                                  "tga", "tiff", "webp", "xbm"]:
             img_format = img_format.upper()
         else:
             raise ValueError(f"Unsupported format: {img_format}")

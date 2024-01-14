@@ -20,7 +20,7 @@ python main.py
 
 - Python 3.9+
 
-To install the required packages, run the following command:
+To install the required packages, move to the root directory of the project and run the following command:
 
 ```bash
 python -m pip install -r requirements.txt
