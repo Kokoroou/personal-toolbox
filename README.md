@@ -26,7 +26,7 @@ To install the required packages, move to the root directory of the project and 
 python -m pip install -r requirements.txt
 
 # To install the toolbox
-python -m pip install -e ./src
+python -m pip install -e .
 ```
 
 ## Development Notes

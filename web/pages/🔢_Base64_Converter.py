@@ -9,8 +9,8 @@ from pathlib import Path
 
 import streamlit as st
 
-from ui.utils.page import Page
-from personal_tools.tools_base64 import Base64Converter
+from personal_tools.file_tools.conversion.convert_base64 import Base64Converter
+from ..utils.page import Page
 
 st.set_page_config(
     page_title="Base64 Converter",

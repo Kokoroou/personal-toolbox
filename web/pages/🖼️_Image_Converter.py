@@ -11,8 +11,8 @@ import PIL
 import streamlit as st
 from PIL import Image
 
-from personal_tools.tools_image import ImageConverter
-from ui.utils.render import BaseRenderer
+from personal_tools.file_tools.conversion.convert_image import ImageConverter
+from ..utils.render import BaseRenderer
 
 st.set_page_config(
     page_title="Image Converter",

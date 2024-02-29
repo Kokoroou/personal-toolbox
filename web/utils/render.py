@@ -5,8 +5,6 @@ from pathlib import Path
 
 import magic
 
-from ui.utils.page import Page
-
 
 class BaseRenderer:
     """
