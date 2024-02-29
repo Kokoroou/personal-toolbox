@@ -34,5 +34,6 @@ python -m pip install -e .
 Before committing any changes, run the following command to check for any formatting errors:
 
 ```bash
-python -m pylint ./src
+python -m pylint ./personal_tools
+python -m pylint ./web
 ```
