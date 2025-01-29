@@ -34,6 +34,9 @@ python -m pip install -e .
 Before committing any changes, run the following command to check for any formatting errors:
 
 ```bash
+python -m isort --profile black .
+python -m black .
+python -m flake8 --ignore=E203,E501,W503 .
 python -m pylint ./personal_tools
 python -m pylint ./web
 ```

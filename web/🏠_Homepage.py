@@ -1,6 +1,7 @@
 """
 Homepage for Streamlit app
 """
+
 # pylint: disable=invalid-name,non-ascii-file-name
 # Note: Streamlit page names is created from filename
 

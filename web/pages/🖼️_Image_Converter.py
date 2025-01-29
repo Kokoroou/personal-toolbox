@@ -12,6 +12,7 @@ import streamlit as st
 from PIL import Image
 
 from personal_tools.file_tools.conversion.convert_image import ImageConverter
+
 from ..utils.render import BaseRenderer
 
 st.set_page_config(
@@ -27,10 +28,30 @@ class ImageRenderer(BaseRenderer):
     """
     Renderer for Image Converter page
     """
+
     # All formats fully supported by Pillow
-    supported_formats = ["BLP", "BMP", "DDS", "DIB", "EPS", "GIF", "ICNS", "ICO", "IM",
-                         "JPEG", "MSP", "PCX", "PNG", "PPM", "SGI", "SPIDER",
-                         "TGA", "TIFF", "WEBP", "XBM"]
+    supported_formats = [
+        "BLP",
+        "BMP",
+        "DDS",
+        "DIB",
+        "EPS",
+        "GIF",
+        "ICNS",
+        "ICO",
+        "IM",
+        "JPEG",
+        "MSP",
+        "PCX",
+        "PNG",
+        "PPM",
+        "SGI",
+        "SPIDER",
+        "TGA",
+        "TIFF",
+        "WEBP",
+        "XBM",
+    ]
     extensions_additional = ["JPG"]
     extensions_map = {
         "JPG": "JPEG",
@@ -54,10 +75,15 @@ class ImageRenderer(BaseRenderer):
         placeholder.title("Config")
 
         # Add format selection
-        self.config["raw_format"] = placeholder.selectbox("Convert to", self.supported_formats,
-                                                          index=self.supported_formats.index("JPG"))
+        self.config["raw_format"] = placeholder.selectbox(
+            "Convert to",
+            self.supported_formats,
+            index=self.supported_formats.index("JPG"),
+        )
         if self.config["raw_format"].upper() in self.extensions_map:
-            self.config["format"] = self.extensions_map[self.config["raw_format"].upper()]
+            self.config["format"] = self.extensions_map[
+                self.config["raw_format"].upper()
+            ]
         else:
             self.config["format"] = self.config["raw_format"]
         self.config["format"] = self.config["format"].lower()
@@ -66,7 +92,9 @@ class ImageRenderer(BaseRenderer):
         self.config["vis"] = placeholder.checkbox("Visualize image", value=False)
         self.config["vis_columns"] = 3
         if self.config["vis"]:
-            self.config["vis_columns"] = placeholder.slider("Columns", min_value=1, max_value=10, value=3)
+            self.config["vis_columns"] = placeholder.slider(
+                "Columns", min_value=1, max_value=10, value=3
+            )
 
     def render_input(self, placeholder):
         """
@@ -74,8 +102,9 @@ class ImageRenderer(BaseRenderer):
 
         :param placeholder: Placeholder for input section
         """
-        self.cache["files"] = placeholder.file_uploader("Upload image",
-                                                        accept_multiple_files=True)
+        self.cache["files"] = placeholder.file_uploader(
+            "Upload image", accept_multiple_files=True
+        )
 
         return self.cache["files"]
 
@@ -107,7 +136,9 @@ class ImageRenderer(BaseRenderer):
 
                     converted_images.append(converted_image)
 
-                    progress_bar.progress((i + 1) / len(files), f"Converting {file.name}...")
+                    progress_bar.progress(
+                        (i + 1) / len(files), f"Converting {file.name}..."
+                    )
 
                 progress_bar.empty()
 
@@ -121,10 +152,10 @@ class ImageRenderer(BaseRenderer):
 
         :param placeholder: Placeholder for output section
         """
-        if self.config["vis"] and \
-                any(image is not None for image in self.cache["converted_images"]):
-            vis_expander = placeholder.expander("Visualize image",
-                                                expanded=False)
+        if self.config["vis"] and any(
+            image is not None for image in self.cache["converted_images"]
+        ):
+            vis_expander = placeholder.expander("Visualize image", expanded=False)
 
             columns = vis_expander.columns(self.config["vis_columns"])
 
@@ -135,7 +166,9 @@ class ImageRenderer(BaseRenderer):
                 columns[i % self.config["vis_columns"]].image(image)
 
     def create_download_data(self):
-        converted_count = sum(image is not None for image in self.cache["converted_images"])
+        converted_count = sum(
+            image is not None for image in self.cache["converted_images"]
+        )
 
         if converted_count >= 1:
             shutil.rmtree(self.temp_dir, ignore_errors=True)
@@ -191,11 +224,13 @@ def app():
     section_middle = main.container()
     section_output = main.container()
 
-    renderer.render_header(header,
-                           title="Image Converter",
-                           caption="Convert images to different formats. "
-                                   "Support from common formats like PNG, JPG, BMP to "
-                                   "more rare formats like BLP, DDS, etc.")
+    renderer.render_header(
+        header,
+        title="Image Converter",
+        caption="Convert images to different formats. "
+        "Support from common formats like PNG, JPG, BMP to "
+        "more rare formats like BLP, DDS, etc.",
+    )
     renderer.render_config(sidebar)
     renderer.render_input(section_input)
 

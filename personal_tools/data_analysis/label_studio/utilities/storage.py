@@ -1,6 +1,7 @@
 """
 Storage utilities
 """
+
 from pathlib import Path
 
 
@@ -16,10 +17,10 @@ def standardize_path(path: str) -> str:
 
     # Change the prefix
     if path.startswith("/data/local-files/?d=/label-studio/data/"):
-        path = path[len("/data/local-files/?d=/label-studio/data/"):]
+        path = path[len("/data/local-files/?d=/label-studio/data/") :]
     elif path.startswith("/data/local-files/?d=label-studio/data/"):
-        path = path[len("/data/local-files/?d=label-studio/data/"):]
+        path = path[len("/data/local-files/?d=label-studio/data/") :]
     elif path.startswith("/data/upload/"):
-        path = "media/" + path[len("/data/"):]
+        path = "media/" + path[len("/data/") :]
 
     return path

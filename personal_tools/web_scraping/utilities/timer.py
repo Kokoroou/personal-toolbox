@@ -1,6 +1,7 @@
 """
 This module contains the class to measure and manipulate the time taken by a code block
 """
+
 import time
 
 
@@ -13,6 +14,7 @@ class Stopwatch:
     with Stopwatch(desc="Sleep", verbose=True):
         time.sleep(2)
     """
+
     def __init__(self, desc=None, verbose=True):
         self.desc = desc
         self.verbose = verbose

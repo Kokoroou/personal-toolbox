@@ -1,6 +1,7 @@
 """
 Utilities for encoding and decoding data
 """
+
 import pyotp
 
 

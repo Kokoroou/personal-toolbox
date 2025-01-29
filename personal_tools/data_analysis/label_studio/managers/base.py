@@ -1,10 +1,11 @@
 """
 Base manager for Label Studio
 """
+
 from dataclasses import dataclass
 
 from label_studio_sdk import Client
-from paramiko import SSHClient, AutoAddPolicy
+from paramiko import AutoAddPolicy, SSHClient
 
 
 @dataclass
@@ -18,6 +19,7 @@ class BaseManagerConfig:
     :param user: Username for remote server of Label Studio.
     :param password: Password for remote server of Label Studio.
     """
+
     url: str = ""
     key: str = ""
     ip: str = ""
@@ -29,6 +31,7 @@ class BaseManager:
     """
     Base manager for Label Studio
     """
+
     def __init__(self, config: BaseManagerConfig):
         """
         Initialize BaseManager class
@@ -45,9 +48,12 @@ class BaseManager:
             # Connect to Label Studio server by SSH
             self.ssh_client = SSHClient()
             self.ssh_client.set_missing_host_key_policy(AutoAddPolicy())
-            self.ssh_client.connect(hostname=config.ip,
-                                    username=config.user, password=config.password,
-                                    timeout=10)
+            self.ssh_client.connect(
+                hostname=config.ip,
+                username=config.user,
+                password=config.password,
+                timeout=10,
+            )
             if bool(self.ssh_client.get_transport().is_active()):
                 print("Connected to Label Studio Server.")
             else:

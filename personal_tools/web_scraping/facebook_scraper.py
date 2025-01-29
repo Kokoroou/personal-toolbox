@@ -17,23 +17,39 @@ from personal_tools.web_scraping.utilities.encoding import get_2fa_code
 
 def get_args():
     """Get parsed arguments from command line."""
-    parser = argparse.ArgumentParser(description='Facebook Scraper')
+    parser = argparse.ArgumentParser(description="Facebook Scraper")
 
     # Environment variables
-    parser.add_argument('--env', type=str, default='./.env', help='Path to .env file.')
+    parser.add_argument("--env", type=str, default="./.env", help="Path to .env file.")
 
     # Scraper configuration
-    parser.add_argument('--source', type=str, help='Source of the data', required=True,
-                        choices=['group', 'page', 'profile', 'all'])
-    parser.add_argument('--max', type=int, help='Maximum number of posts to scrape', default=100)
-    parser.add_argument('--output', type=str, help='Output folder', default='./data')
-    parser.add_argument('--media', type=str, help='Media type to scrape', default='all',
-                        nargs='+', choices=['all', 'photo', 'video', 'link', 'text'])
+    parser.add_argument(
+        "--source",
+        type=str,
+        help="Source of the data",
+        required=True,
+        choices=["group", "page", "profile", "all"],
+    )
+    parser.add_argument(
+        "--max", type=int, help="Maximum number of posts to scrape", default=100
+    )
+    parser.add_argument("--output", type=str, help="Output folder", default="./data")
+    parser.add_argument(
+        "--media",
+        type=str,
+        help="Media type to scrape",
+        default="all",
+        nargs="+",
+        choices=["all", "photo", "video", "link", "text"],
+    )
 
     # Details
-    parser.add_argument('--id', type=str,
-                        help='ID of the group, page or profile if source is not "all"',
-                        required=("--source" in ["group", "page", "profile"]))
+    parser.add_argument(
+        "--id",
+        type=str,
+        help='ID of the group, page or profile if source is not "all"',
+        required=("--source" in ["group", "page", "profile"]),
+    )
 
     return parser.parse_args()
 
@@ -61,7 +77,9 @@ class FacebookScraper:
 
         # Input username
         sleep(1)  # Wait for page load
-        user_name_element = self.web_driver.find_elements(By.CSS_SELECTOR, "#m_login_email")
+        user_name_element = self.web_driver.find_elements(
+            By.CSS_SELECTOR, "#m_login_email"
+        )
         user_name_element[0].send_keys(username)
 
         # Input password
@@ -81,7 +99,9 @@ class FacebookScraper:
         # Input 2fa code
         code_2fa = get_2fa_code(key_2fa)
         sleep(1)  # Wait for robot check
-        code_2fa_element = self.web_driver.find_elements(By.CSS_SELECTOR, "#approvals_code")
+        code_2fa_element = self.web_driver.find_elements(
+            By.CSS_SELECTOR, "#approvals_code"
+        )
         code_2fa_element[0].send_keys(code_2fa)
 
         # Click submit button
@@ -94,7 +114,8 @@ class FacebookScraper:
         # Do not save login info
         sleep(1)  # Wait for new page load
         btn_do_not_save_login_info = self.web_driver.find_elements(
-            By.XPATH, '//*[starts-with(@id, "u_0_")]/section/section[2]/div[2]/div/div[2]/label'
+            By.XPATH,
+            '//*[starts-with(@id, "u_0_")]/section/section[2]/div[2]/div/div[2]/label',
         )
         if len(btn_do_not_save_login_info) > 0:
             btn_do_not_save_login_info[0].click()
@@ -119,7 +140,9 @@ class FacebookScraper:
         Logout Facebook
         """
         print("\nLogout...")
-        btn_logout = self.web_driver.find_elements(By.XPATH, '//*[@id="mbasic_logout_button"]')
+        btn_logout = self.web_driver.find_elements(
+            By.XPATH, '//*[@id="mbasic_logout_button"]'
+        )
         if len(btn_logout) > 0:
             sleep(1)  # Wait for new page load
             btn_logout[0].click()
@@ -202,7 +225,7 @@ class FacebookScraper:
 if __name__ == "__main__":
     args = get_args()
     load_dotenv(dotenv_path=args.env)
-    assert Path(args.env).exists(), f'File {args.env} does not exist.'
+    assert Path(args.env).exists(), f"File {args.env} does not exist."
 
     FB_USERNAME = os.getenv("FB_USERNAME")
     FB_PASSWORD = os.getenv("FB_PASSWORD")

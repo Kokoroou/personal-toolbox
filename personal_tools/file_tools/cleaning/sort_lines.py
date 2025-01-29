@@ -1,45 +1,59 @@
 """
 Utility to sort lines in file alphabetically
 """
+
 import argparse
 from pathlib import Path
 from typing import Union
 
 
-def sort_lines(file_path: Union[str, Path]) -> None:
-    """
-    Sort lines in file alphabetically
+def sort_file_lines(file_path: Union[str, Path]):
+    """Sắp xếp lại các dòng trong file theo thứ tự bảng chữ cái."""
+    file_path = Path(file_path)
 
-    :param file_path: Path to the file that needs to be sorted
-    """
-    # Add new line to the end of file if not exists
-    with open(file_path, "a", encoding="utf-8") as file:
+    if not file_path.exists():
+        print(f"Lỗi: File '{file_path}' không tồn tại.")
+        return
+
+    if not file_path.is_file():
+        print(f"Lỗi: '{file_path}' không phải là một file hợp lệ.")
+        return
+
+    # Đảm bảo file có dòng trống ở cuối
+    with file_path.open("a", encoding="utf-8") as file:
         file.write("\n")
 
-    # Read file
-    with open(file_path, "r", encoding="utf-8") as file:
-        lines = file.readlines()
+    try:
+        lines = file_path.read_text(encoding="utf-8").splitlines(keepends=True)
+    except Exception as e:
+        print(f"Lỗi khi đọc file: {e}")
+        return
 
-    # Remove empty lines
+    if not lines:
+        print("Lỗi: File rỗng, không có gì để sắp xếp.")
+        return
+
     lines = [line for line in lines if line.strip()]
+    sorted_lines = sorted(lines, key=str.lower)
 
-    # Sort lines
-    lines.sort()
+    try:
+        file_path.write_text("".join(sorted_lines) + "\n", encoding="utf-8")
+        print(f"Đã sắp xếp xong file '{file_path}'.")
+    except Exception as e:
+        print(f"Lỗi khi ghi file: {e}")
 
-    # Write to file
-    with open(file_path, "w", encoding="utf-8") as file:
-        file.writelines(lines)
 
-
-if __name__ == '__main__':
-    # Create parser for command line arguments
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Sort lines in file alphabetically. "
-                    "Can be used for 'requirements.txt' files or '.ignore' files")
-    parser.add_argument('--path', '-p', type=str, help="Path to the requirements file")
-
-    # Parse command line arguments
+        description="Sắp xếp các dòng trong file theo thứ tự bảng chữ cái, "
+        "giữ nguyên comment và dòng trống."
+    )
+    parser.add_argument(
+        "file_path", type=str, nargs="?", help="Đường dẫn đến file cần sắp xếp"
+    )
     args = parser.parse_args()
 
-    # Sort lines in file
-    sort_lines(args.path)
+    if not args.file_path:
+        args.file_path = input("Nhập đường dẫn file cần sắp xếp: ").strip()
+
+    sort_file_lines(args.file_path)

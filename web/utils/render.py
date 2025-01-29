@@ -1,6 +1,7 @@
 """
 Render class
 """
+
 from pathlib import Path
 
 import magic
@@ -10,6 +11,7 @@ class BaseRenderer:
     """
     Base class for renderers
     """
+
     def __init__(self):
         """
         Initialize BaseRenderer class
@@ -48,7 +50,7 @@ class BaseRenderer:
 
         if download_data:
             if not isinstance(download_data, bytes):
-                raise AttributeError("cache[\"output\"] must be bytes")
+                raise AttributeError('cache["output"] must be bytes')
 
             # Add download button
             placeholder.download_button(

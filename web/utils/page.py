@@ -1,6 +1,7 @@
 """
 Page class to define page structure
 """
+
 import streamlit as st
 
 
@@ -8,6 +9,7 @@ class Page:
     """
     Page class to define page structure
     """
+
     def __init__(self, page_config: dict = None):
         """
         Initialize Page class

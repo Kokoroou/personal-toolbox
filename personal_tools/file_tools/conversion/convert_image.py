@@ -1,6 +1,7 @@
 """
 Set of tools for converting images to different formats.
 """
+
 from io import BytesIO
 
 from PIL import Image
@@ -28,9 +29,28 @@ class ImageConverter:
         """
         self.last_image = image.convert("RGB")
 
-        if img_format.lower() in ["blp", "bmp", "dds", "dib", "eps", "gif", "icns", "ico", "im",
-                                  "jpeg", "msp", "pcx", "png", "ppm", "sgi", "spider",
-                                  "tga", "tiff", "webp", "xbm"]:
+        if img_format.lower() in [
+            "blp",
+            "bmp",
+            "dds",
+            "dib",
+            "eps",
+            "gif",
+            "icns",
+            "ico",
+            "im",
+            "jpeg",
+            "msp",
+            "pcx",
+            "png",
+            "ppm",
+            "sgi",
+            "spider",
+            "tga",
+            "tiff",
+            "webp",
+            "xbm",
+        ]:
             img_format = img_format.upper()
         else:
             raise ValueError(f"Unsupported format: {img_format}")

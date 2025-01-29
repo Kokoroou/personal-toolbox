@@ -1,6 +1,7 @@
 """
 Utility functions for working with selenium driver
 """
+
 import os
 from typing import List
 
@@ -10,10 +11,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
 
-def create_driver(
-        headless: bool = True,
-        detach: bool = False
-) -> webdriver:
+def create_driver(headless: bool = True, detach: bool = False) -> webdriver:
     """
     Initialize chrome driver with profile
     :param headless: Whether to run the chrome driver in headless mode.
@@ -27,14 +25,16 @@ def create_driver(
 
     chrome_options = Options()
 
-    chrome_options.add_argument('disable-infobars')
+    chrome_options.add_argument("disable-infobars")
 
     chrome_options.add_argument("--allow-running-insecure-content")
     chrome_options.add_argument("--disable-blink-features=AutomationControllered")
-    chrome_options.add_argument("--disable-dev-shm-usage")  # overcome limited resource problems
+    chrome_options.add_argument(
+        "--disable-dev-shm-usage"
+    )  # overcome limited resource problems
     chrome_options.add_argument("--disable-feature=IsolateOrigins,site-per-process")
-    if os.name == 'nt':
-        chrome_options.add_argument('--disable-gpu')  # Windows workaround
+    if os.name == "nt":
+        chrome_options.add_argument("--disable-gpu")  # Windows workaround
     chrome_options.add_argument("--disable-notifications")
     chrome_options.add_argument("--disable-translate")
     chrome_options.add_argument("--disable-web-security")
@@ -46,7 +46,7 @@ def create_driver(
     chrome_options.add_argument("--incognito")
     chrome_options.add_argument("--no-default-browser-check")
     chrome_options.add_argument("--no-first-run")
-    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--start-maximized")  # open Browser in maximized mode
     chrome_options.add_argument(f"--window-size={window_size}")
     chrome_options.add_argument("--verbose")
@@ -54,7 +54,7 @@ def create_driver(
     chrome_options.add_experimental_option("detach", detach)
     chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
     chrome_options.add_experimental_option("prefs", prefs)
-    chrome_options.add_experimental_option('useAutomationExtension', False)
+    chrome_options.add_experimental_option("useAutomationExtension", False)
 
     driver = webdriver.Chrome(options=chrome_options)
     return driver
@@ -70,7 +70,9 @@ def find_elements_by_text(driver: webdriver, text: str) -> List[WebElement]:
     return driver.find_elements(By.XPATH, f"//*[contains(text(), '{text}')]")
 
 
-def find_elements_by_attribute(driver: webdriver, attribute: str, value: str) -> List[WebElement]:
+def find_elements_by_attribute(
+    driver: webdriver, attribute: str, value: str
+) -> List[WebElement]:
     """
     Find elements by attribute
     :param driver: The driver to use

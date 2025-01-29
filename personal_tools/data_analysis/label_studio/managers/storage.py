@@ -7,15 +7,15 @@ import json
 import os
 import time
 from pathlib import Path
-from typing import List, Union, Dict
+from typing import Dict, List, Union
 
 from dotenv import load_dotenv
 
-from personal_tools.data_analysis.label_studio.managers.base \
-    import BaseManager, BaseManagerConfig
-from personal_tools.data_analysis.label_studio.utilities.storage \
-    import standardize_path
-
+from personal_tools.data_analysis.label_studio.managers.base import (
+    BaseManager,
+    BaseManagerConfig,
+)
+from personal_tools.data_analysis.label_studio.utilities.storage import standardize_path
 
 # Define default location to store temporary files
 TEMP_DIR = "/tmp/kokoroou-cached"
@@ -25,16 +25,29 @@ if not Path(TEMP_DIR).exists():
 
 def get_args():
     """Get parsed arguments from command line."""
-    parser = argparse.ArgumentParser(description='Manage data sources in Label Studio.')
+    parser = argparse.ArgumentParser(description="Manage data sources in Label Studio.")
 
-    parser.add_argument('--env', type=str, default='./.env', help='Path to .env file.')
-    parser.add_argument('--type', '-t', type=str, default='all',
-                        help='Type of data sources to manage. '
-                             'Can be "missing", "unused", "all".')
-    parser.add_argument('--project', '-p', type=int, metavar='PROJECT_ID',
-                        help='ID of the project to manage data sources.')
-    parser.add_argument('--force', '-f', action='store_true',
-                        help='Force to get all data sources from Label Studio again.')
+    parser.add_argument("--env", type=str, default="./.env", help="Path to .env file.")
+    parser.add_argument(
+        "--type",
+        "-t",
+        type=str,
+        default="all",
+        help="Type of data sources to manage. " 'Can be "missing", "unused", "all".',
+    )
+    parser.add_argument(
+        "--project",
+        "-p",
+        type=int,
+        metavar="PROJECT_ID",
+        help="ID of the project to manage data sources.",
+    )
+    parser.add_argument(
+        "--force",
+        "-f",
+        action="store_true",
+        help="Force to get all data sources from Label Studio again.",
+    )
 
     return parser.parse_args()
 
@@ -44,11 +57,12 @@ class StorageManager(BaseManager):
     Manager to handle storages of Label Studio data
     """
 
-    def get_all_sources(self,
-                        return_dict=False,
-                        force_update: bool = False,
-                        cache_file: str = f"{TEMP_DIR}/ls_storage.json"
-                        ) -> Union[List[str], Dict[str, List[str]]]:
+    def get_all_sources(
+        self,
+        return_dict=False,
+        force_update: bool = False,
+        cache_file: str = f"{TEMP_DIR}/ls_storage.json",
+    ) -> Union[List[str], Dict[str, List[str]]]:
         """
         Get all data sources in Label Studio.
 
@@ -62,7 +76,7 @@ class StorageManager(BaseManager):
 
         if not force_update and Path(cache_file).exists():
             # Load the data sources from the cache file
-            with open(cache_file, 'r', encoding='utf-8') as f:
+            with open(cache_file, "r", encoding="utf-8") as f:
                 ls_sources_dict = json.load(f)
 
         else:
@@ -78,8 +92,12 @@ class StorageManager(BaseManager):
 
                 # Get all tasks of the project
                 start = time.time()
-                print(f"[{proj_idx + 1}/{len(projects)}] "
-                      f"Getting tasks of project {project.id}...", end="", flush=True)
+                print(
+                    f"[{proj_idx + 1}/{len(projects)}] "
+                    f"Getting tasks of project {project.id}...",
+                    end="",
+                    flush=True,
+                )
                 tasks = project.get_tasks()
                 print(f"Done in {time.time() - start:.2f} seconds.")
 
@@ -102,7 +120,7 @@ class StorageManager(BaseManager):
             ls_sources_dict = dict(sorted(ls_sources_dict.items()))
 
             # Save the data sources to the cache file
-            with open(cache_file, 'w', encoding='utf-8') as f:
+            with open(cache_file, "w", encoding="utf-8") as f:
                 json.dump(ls_sources_dict, f, indent=4)
 
         if return_dict:
@@ -124,7 +142,7 @@ class StorageManager(BaseManager):
         )
 
         # Get the list of folders
-        ls_sources = stdout.read().decode('utf-8').split()
+        ls_sources = stdout.read().decode("utf-8").split()
         ls_sources = sorted(ls_sources)
 
         # Close the channels
@@ -133,10 +151,10 @@ class StorageManager(BaseManager):
         stderr.close()
 
         # Filter out the root folder
-        ls_sources = [source for source in ls_sources if source != '.']
+        ls_sources = [source for source in ls_sources if source != "."]
 
         # Remove the leading './' from the folder paths
-        ls_sources = [source[len("./"):] for source in ls_sources]
+        ls_sources = [source[len("./") :] for source in ls_sources]
 
         # Filter out folders that have sub-folder(s)
         to_filter = []
@@ -146,14 +164,12 @@ class StorageManager(BaseManager):
         ls_sources = [source for source in ls_sources if source not in to_filter]
 
         # Filter out some folders that are not data sources
-        to_filter = [
-            "export",
-            "media/avatars",
-            "media/export",
-            "test_data"
+        to_filter = ["export", "media/avatars", "media/export", "test_data"]
+        ls_sources = [
+            source
+            for source in ls_sources
+            if not any(source.startswith(f) for f in to_filter)
         ]
-        ls_sources = [source for source in ls_sources
-                      if not any(source.startswith(f) for f in to_filter)]
 
         return ls_sources
 
@@ -169,11 +185,15 @@ class StorageManager(BaseManager):
         used_sources = self.get_all_sources(return_dict=True, force_update=force_update)
 
         # Filter out sources that are not in the server
-        ls_sources = [source for source in used_sources.keys() if source not in ls_sources]
+        ls_sources = [
+            source for source in used_sources.keys() if source not in ls_sources
+        ]
 
         # Add the projects that use the missing sources
-        ls_sources = [f"{source: <20} - Required by projects: {used_sources[source]}"
-                      for source in ls_sources]
+        ls_sources = [
+            f"{source: <20} - Required by projects: {used_sources[source]}"
+            for source in ls_sources
+        ]
 
         return ls_sources
 
@@ -225,35 +245,36 @@ class StorageManager(BaseManager):
 if __name__ == "__main__":
     args = get_args()
     load_dotenv(dotenv_path=args.env)
-    assert Path(args.env).exists(), f'File {args.env} does not exist.'
+    assert Path(args.env).exists(), f"File {args.env} does not exist."
 
-    LS_URL = os.getenv('LS_URL')
-    LS_API_KEY = os.getenv('LS_API_KEY')
-    LS_IP = os.getenv('LS_IP')
-    LS_USER = os.getenv('LS_USER')
-    LS_PASSWORD = os.getenv('LS_PASSWORD')
+    LS_URL = os.getenv("LS_URL")
+    LS_API_KEY = os.getenv("LS_API_KEY")
+    LS_IP = os.getenv("LS_IP")
+    LS_USER = os.getenv("LS_USER")
+    LS_PASSWORD = os.getenv("LS_PASSWORD")
 
-    assert LS_URL is not None, f'LS_URL is not set in {args.env} file.'
-    assert LS_API_KEY is not None, f'LS_API_KEY is not set in {args.env} file'
+    assert LS_URL is not None, f"LS_URL is not set in {args.env} file."
+    assert LS_API_KEY is not None, f"LS_API_KEY is not set in {args.env} file"
 
     # Initialize a Label Studio Manager
     manager = StorageManager(
-        BaseManagerConfig(url=LS_URL, key=LS_API_KEY,
-                          ip=LS_IP, user=LS_USER, password=LS_PASSWORD)
+        BaseManagerConfig(
+            url=LS_URL, key=LS_API_KEY, ip=LS_IP, user=LS_USER, password=LS_PASSWORD
+        )
     )
 
     # Get data sources
     if args.project:
         sources = manager.get_sources_by_project(project_id=args.project)
     else:
-        if args.type == 'all':
+        if args.type == "all":
             sources = manager.get_all_sources(force_update=args.force)
-        elif args.type == 'missing':
+        elif args.type == "missing":
             sources = manager.get_missing_sources(force_update=args.force)
-        elif args.type == 'unused':
+        elif args.type == "unused":
             sources = manager.get_unused_sources(force_update=args.force)
         else:
-            raise ValueError(f'Invalid type: {args.type}')
+            raise ValueError(f"Invalid type: {args.type}")
 
     print("\nData sources:")
     for src in sources:
